@@ -16,12 +16,65 @@ public class Roomba implements Directions {
 		World.readWorld("basicRoom.wld");
 		World.setSize(15,15);
     	World.setVisible(true);
+		World.setDelay(10)
 
-		Robot r = new Robot(10, 10, North, 0);
-    String wrldName = "basicRoom.wld";
+		Robot Roomba = new Robot(1, 1, East, 0);
 
-		while(r.nextToABeeper());
-		r.pickBeeper();
+		cleanRoom();
+	}
+	public static void cleanRoom() {
+        while (true) {
+            cleanRow();  // clean current row
+
+            // If robot is facing east and can move down
+            if (Roomba.facingEast()) {
+                if (Roomba.frontIsClear()) {
+                    Roomba.turnLeft();
+                    Roomba.move();
+                    Roomba.turnLeft();
+                } else {
+                    break;  // no more rows
+                }
+            }
+
+            // If robot is facing west and can move down
+            else if (Roomba.facingWest()) {
+                if (Roomba.frontIsClear()) {
+                    turnRight();
+                    Roomba.move();
+                    turnRight();
+                } else {
+                    break;  // no more rows
+                }
+            }
+        }
+    }
+
+    // Clean one row
+    public static void cleanRow() {
+        while (Roomba.frontIsClear()) {
+            // pick all beepers in this spot
+            while (Roomba.nextToABeeper()) {
+                Roomba.pickBeeper();
+            }
+            Roomba.move();
+        }
+
+        // check the last spot in the row
+        while (Roomba.nextToABeeper()) {
+            Roomba.pickBeeper();
+        }
+    }
+
+    // Turn right (3 left turns)
+    public static void turnRight() {
+        Roomba.turnLeft();
+        Roomba.turnLeft();
+        Roomba.turnLeft();
+    }
+
+
+
 
     
 
@@ -58,4 +111,4 @@ public class Roomba implements Directions {
 
   }
 
-}
+
